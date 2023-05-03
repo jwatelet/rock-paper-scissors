@@ -1,3 +1,12 @@
+let playerPoints = 0;
+let computerPoints = 0;
+
+
+document.querySelector(".rock").addEventListener("click", (e) => playRound("rock"));
+document.querySelector(".paper").addEventListener("click", (e) => playRound("paper"));
+document.querySelector(".scissors").addEventListener("click", (e) => playRound("scissors"));
+document.querySelector(".reset").addEventListener("click", (e) => resetGame());
+
 function getComputerChoice() {
 
   var r = Math.floor(Math.random() * 3);
@@ -12,7 +21,7 @@ function getComputerChoice() {
   }
 }
 
-function playRound(playerSelection, computerSelection) {
+function calculateResult(playerSelection, computerSelection) {
 
   playerSelection = playerSelection.toLowerCase();
   computerSelection = computerSelection.toLowerCase();
@@ -30,35 +39,61 @@ function playRound(playerSelection, computerSelection) {
 }
 
 
-function game() {
+function resetGame() {
+  playerPoints = 0;
+  computerPoints = 0;
+  setPlayerScore(playerPoints);
+  setComputerScore(computerPoints);
+  setGameLog("");
+  toggleButtons();
+}
 
-  let playerPoints = 0;
-  let computerPoints = 0;
+function toggleButtons() {
+  document.querySelectorAll("button")
+    .forEach((button) => button.classList.toggle("hidden"));
+}
 
-  console.log("It's FT3 game !");
-  while (playerPoints < 3 && computerPoints < 3) {
+function playRound(playerSelection) {
+  let computerSelection = getComputerChoice();
 
-    let playerSelection = prompt("What's your weapon ? Paper, rock or scissors ?");
-    let computerSelection = getComputerChoice();
+  let roundResult = calculateResult(playerSelection, computerSelection);
 
-    let roundResult = playRound(playerSelection, computerSelection);
-
-    if (roundResult === 1) {
-      console.log(`"You Lose! ${playerSelection} beats ${computerSelection}"`);
-      playerPoints++;
-    } else if (roundResult === 0) {
-      console.log("It's a tie! Neither win");
-    } else {
-      console.log(`"You Lose! ${computerSelection} beats ${playerSelection}"`);
-      computerPoints++;
-    }
-
-    console.log(`Player points : ${playerPoints}, computer points : ${computerPoints}`);
+  if (roundResult === 1) {
+    setGameLog(`You Win! ${playerSelection} beats ${computerSelection}`);
+    playerPoints++;
+  } else if (roundResult === 0) {
+    setGameLog("It's a tie! Neither win");
+  } else {
+    setGameLog(`You Lose! ${computerSelection} beats ${playerSelection}`);
+    computerPoints++;
   }
+  setPlayerScore(playerPoints);
+  setComputerScore(computerPoints);
 
-  if (playerPoints > computerPoints) {
-    console.log(`Player win!`)
+  if (playerPoints >= 5 && playerPoints > computerPoints) {
+    setGameLog(`Player wins!`);
+    toggleButtons();
+  } else if (computerPoints >= 5 && computerPoints > playerPoints) {
+    setGameLog("Computer wins!");
+    toggleButtons();
   }
 }
 
-game();
+function setPlayerScore(score) {
+  const playerScoreDiv = document.querySelector(".playerScore");
+
+  playerScoreDiv.textContent = score;
+}
+
+function setComputerScore(score) {
+  const computerScoreDiv = document.querySelector(".computerScore");
+
+  computerScoreDiv.textContent = score;
+}
+
+function setGameLog(text) {
+  const logDiv = document.querySelector(".log");
+
+  logDiv.textContent = text;
+}
+
