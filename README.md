@@ -1,3 +1,3 @@
 # rock-paper-scissors
 
-A rock, paper, scissors navigator console game, frome de odin's project learning path.
+A rock, paper, scissors web game, frome de odin's project learning path.
